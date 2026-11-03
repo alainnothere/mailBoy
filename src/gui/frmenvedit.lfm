@@ -1,0 +1,84 @@
+object EnvEditForm: TEnvEditForm
+  Left = 350
+  Height = 440
+  Top = 250
+  Width = 680
+  Caption = 'Environment'
+  ClientHeight = 440
+  ClientWidth = 680
+  Position = poOwnerFormCenter
+  object lblName: TLabel
+    Left = 8
+    Height = 17
+    Top = 12
+    Width = 44
+    Caption = 'Name:'
+  end
+  object edName: TEdit
+    Left = 60
+    Height = 26
+    Top = 8
+    Width = 612
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 0
+  end
+  object gridVars: TStringGrid
+    Left = 8
+    Height = 340
+    Top = 42
+    Width = 664
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoFillColumns = True
+    Columns = <
+      item
+        ButtonStyle = cbsCheckboxColumn
+        SizePriority = 0
+        Title.Caption = 'On'
+        Width = 40
+      end
+      item
+        SizePriority = 0
+        Title.Caption = 'Key'
+        Width = 200
+      end
+      item
+        Title.Caption = 'Value'
+        Width = 400
+      end>
+    FixedCols = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goAutoAddRows, goSmoothScroll]
+    RowCount = 2
+    TabOrder = 1
+    OnPrepareCanvas = gridVarsPrepareCanvas
+  end
+  object lblHint: TLabel
+    Left = 8
+    Height = 17
+    Top = 394
+    Width = 500
+    Anchors = [akLeft, akBottom]
+    Caption = 'Red values are placeholders and count as undefined until replaced. Empty key = row ignored.'
+  end
+  object btnOK: TButton
+    Left = 512
+    Height = 28
+    Top = 404
+    Width = 76
+    Anchors = [akRight, akBottom]
+    Caption = 'OK'
+    Default = True
+    OnClick = btnOKClick
+    TabOrder = 2
+  end
+  object btnCancel: TButton
+    Left = 596
+    Height = 28
+    Top = 404
+    Width = 76
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+end

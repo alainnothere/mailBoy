@@ -1,0 +1,642 @@
+object MainForm: TMainForm
+  Left = 300
+  Height = 720
+  Top = 200
+  Width = 1300
+  AllowDropFiles = True
+  Caption = 'mailBoy'
+  ClientHeight = 720
+  ClientWidth = 1300
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnDropFiles = FormDropFiles
+  OnKeyDown = FormKeyDown
+  Position = poScreenCenter
+  LCLVersion = '3.0.0.3'
+  object pnlTop: TPanel
+    Left = 0
+    Height = 38
+    Top = 0
+    Width = 1300
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 38
+    ClientWidth = 1300
+    TabOrder = 0
+    object btnOpenCollection: TButton
+      Left = 8
+      Height = 26
+      Top = 6
+      Width = 140
+      Caption = 'Open collection…'
+      OnClick = btnOpenCollectionClick
+      TabOrder = 0
+    end
+    object btnOpenEnvironment: TButton
+      Left = 156
+      Height = 26
+      Top = 6
+      Width = 150
+      Caption = 'Open environment…'
+      OnClick = btnOpenEnvironmentClick
+      TabOrder = 1
+    end
+    object lblEnvironment: TLabel
+      Left = 330
+      Height = 17
+      Top = 11
+      Width = 85
+      Caption = 'Environment:'
+    end
+    object cbEnvironment: TComboBox
+      Left = 424
+      Height = 26
+      Top = 6
+      Width = 200
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        '(none)'
+      )
+      OnChange = cbEnvironmentChange
+      Style = csDropDownList
+      TabOrder = 2
+      Text = '(none)'
+    end
+    object btnEnvNew: TButton
+      Left = 630
+      Height = 26
+      Top = 6
+      Width = 60
+      Caption = 'New…'
+      OnClick = btnEnvNewClick
+      TabOrder = 6
+    end
+    object btnEnvEdit: TButton
+      Left = 694
+      Height = 26
+      Top = 6
+      Width = 60
+      Caption = 'Edit…'
+      OnClick = btnEnvEditClick
+      TabOrder = 7
+    end
+    object btnEnvSave: TButton
+      Left = 758
+      Height = 26
+      Top = 6
+      Width = 64
+      Caption = 'Save…'
+      OnClick = btnEnvSaveClick
+      TabOrder = 8
+    end
+    object lblHook: TLabel
+      Left = 836
+      Height = 17
+      Top = 11
+      Width = 36
+      Caption = 'Hook:'
+    end
+    object edHook: TEdit
+      Left = 878
+      Height = 26
+      Top = 6
+      Width = 216
+      Anchors = [akTop, akLeft, akRight]
+      OnChange = edHookChange
+      TabOrder = 3
+    end
+    object btnHookBrowse: TButton
+      Left = 1100
+      Height = 26
+      Top = 6
+      Width = 80
+      Anchors = [akTop, akRight]
+      Caption = 'Browse…'
+      OnClick = btnHookBrowseClick
+      TabOrder = 4
+    end
+    object spinHookTimeout: TSpinEdit
+      Left = 1188
+      Height = 26
+      Top = 6
+      Width = 64
+      Anchors = [akTop, akRight]
+      MaxValue = 3600
+      MinValue = 1
+      TabOrder = 5
+      Value = 30
+    end
+    object lblHookSec: TLabel
+      Left = 1258
+      Height = 17
+      Top = 11
+      Width = 8
+      Anchors = [akTop, akRight]
+      Caption = 's'
+    end
+    object btnHookHelp: TButton
+      Left = 1270
+      Height = 26
+      Top = 6
+      Width = 26
+      Anchors = [akTop, akRight]
+      Caption = '?'
+      OnClick = btnHookHelpClick
+      TabOrder = 9
+    end
+  end
+  object tvCollection: TTreeView
+    Left = 0
+    Height = 659
+    Top = 38
+    Width = 260
+    Align = alLeft
+    PopupMenu = pmTree
+    ReadOnly = True
+    RightClickSelect = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
+    OnSelectionChanged = tvCollectionSelectionChanged
+    Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+  end
+  object splLeft: TSplitter
+    Left = 260
+    Height = 659
+    Top = 38
+    Width = 5
+  end
+  object pnlRight: TPanel
+    Left = 265
+    Height = 659
+    Top = 38
+    Width = 835
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 659
+    ClientWidth = 835
+    TabOrder = 2
+    object pnlRequest: TPanel
+      Left = 0
+      Height = 330
+      Top = 0
+      Width = 835
+      Align = alTop
+      BevelOuter = bvNone
+      ClientHeight = 330
+      ClientWidth = 835
+      TabOrder = 0
+      object pnlRequestLine: TPanel
+        Left = 0
+        Height = 38
+        Top = 0
+        Width = 835
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 38
+        ClientWidth = 835
+        TabOrder = 0
+        object cbMethod: TComboBox
+          Left = 8
+          Height = 26
+          Top = 6
+          Width = 110
+          ItemHeight = 0
+          Items.Strings = (
+            'GET'
+            'POST'
+            'PUT'
+            'PATCH'
+            'DELETE'
+            'HEAD'
+            'OPTIONS'
+          )
+          TabOrder = 0
+        end
+        object edUrl: TEdit
+          Left = 126
+          Height = 26
+          Top = 6
+          Width = 613
+          Anchors = [akTop, akLeft, akRight]
+          TabOrder = 1
+        end
+        object btnSend: TButton
+          Left = 747
+          Height = 26
+          Top = 6
+          Width = 80
+          Anchors = [akTop, akRight]
+          Caption = 'Send'
+          Default = True
+          OnClick = btnSendClick
+          TabOrder = 2
+        end
+      end
+      object pcRequest: TPageControl
+        Left = 0
+        Height = 292
+        Top = 38
+        Width = 835
+        ActivePage = tsParams
+        Align = alClient
+        TabIndex = 0
+        TabOrder = 1
+        object tsParams: TTabSheet
+          Caption = 'Params'
+          ClientHeight = 260
+          ClientWidth = 829
+          object gridParams: TStringGrid
+            Left = 0
+            Height = 260
+            Top = 0
+            Width = 829
+            Align = alClient
+            AutoFillColumns = True
+            Columns = <
+              item
+                ButtonStyle = cbsCheckboxColumn
+                SizePriority = 0
+                Title.Caption = 'On'
+                Width = 40
+              end
+              item
+                SizePriority = 0
+                Title.Caption = 'Key'
+                Width = 220
+              end
+              item
+                Title.Caption = 'Value'
+                Width = 500
+              end>
+            FixedCols = 0
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
+            RowCount = 1
+            TabOrder = 0
+          end
+        end
+        object tsHeaders: TTabSheet
+          Caption = 'Headers'
+          ClientHeight = 260
+          ClientWidth = 829
+          object gridHeaders: TStringGrid
+            Left = 0
+            Height = 260
+            Top = 0
+            Width = 829
+            Align = alClient
+            AutoFillColumns = True
+            Columns = <
+              item
+                ButtonStyle = cbsCheckboxColumn
+                SizePriority = 0
+                Title.Caption = 'On'
+                Width = 40
+              end
+              item
+                SizePriority = 0
+                Title.Caption = 'Key'
+                Width = 220
+              end
+              item
+                Title.Caption = 'Value'
+                Width = 500
+              end>
+            FixedCols = 0
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
+            RowCount = 1
+            TabOrder = 0
+          end
+        end
+        object tsBody: TTabSheet
+          Caption = 'Body'
+          ClientHeight = 260
+          ClientWidth = 829
+          object pnlBodyTop: TPanel
+            Left = 0
+            Height = 34
+            Top = 0
+            Width = 829
+            Align = alTop
+            BevelOuter = bvNone
+            ClientHeight = 34
+            ClientWidth = 829
+            TabOrder = 0
+            object lblBodyMode: TLabel
+              Left = 8
+              Height = 17
+              Top = 9
+              Width = 40
+              Caption = 'Mode:'
+            end
+            object cbBodyMode: TComboBox
+              Left = 60
+              Height = 26
+              Top = 4
+              Width = 160
+              ItemHeight = 0
+              ItemIndex = 0
+              Items.Strings = (
+                'none'
+                'raw'
+                'urlencoded'
+                'formdata'
+                'graphql'
+                'file'
+                'unknown'
+              )
+              OnChange = cbBodyModeChange
+              Style = csDropDownList
+              TabOrder = 0
+              Text = 'none'
+            end
+          end
+          object memoBody: TMemo
+            Left = 0
+            Height = 226
+            Top = 34
+            Width = 829
+            Align = alClient
+            ScrollBars = ssAutoBoth
+            TabOrder = 1
+            WordWrap = False
+          end
+          object gridBodyFields: TStringGrid
+            Left = 0
+            Height = 226
+            Top = 34
+            Width = 829
+            Align = alClient
+            AutoFillColumns = True
+            Columns = <
+              item
+                ButtonStyle = cbsCheckboxColumn
+                SizePriority = 0
+                Title.Caption = 'On'
+                Width = 40
+              end
+              item
+                SizePriority = 0
+                Title.Caption = 'Key'
+                Width = 220
+              end
+              item
+                Title.Caption = 'Value'
+                Width = 460
+              end
+              item
+                ButtonStyle = cbsCheckboxColumn
+                SizePriority = 0
+                Title.Caption = 'File'
+                Width = 40
+              end>
+            FixedCols = 0
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
+            RowCount = 1
+            TabOrder = 2
+            Visible = False
+          end
+        end
+        object tsAuth: TTabSheet
+          Caption = 'Auth'
+          ClientHeight = 260
+          ClientWidth = 829
+          object memoAuth: TMemo
+            Left = 0
+            Height = 260
+            Top = 0
+            Width = 829
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+          end
+        end
+        object tsCurl: TTabSheet
+          Caption = 'curl'
+          ClientHeight = 260
+          ClientWidth = 829
+          object memoCurl: TMemo
+            Left = 0
+            Height = 260
+            Top = 0
+            Width = 829
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoVertical
+            TabOrder = 0
+          end
+        end
+        object tsScript: TTabSheet
+          Caption = 'Script'
+          ClientHeight = 260
+          ClientWidth = 829
+          object memoScript: TMemo
+            Left = 0
+            Height = 260
+            Top = 0
+            Width = 829
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+            WordWrap = False
+          end
+        end
+      end
+    end
+    object splRight: TSplitter
+      Cursor = crVSplit
+      Left = 0
+      Height = 5
+      Top = 330
+      Width = 835
+      Align = alTop
+      ResizeAnchor = akTop
+    end
+    object pnlResponse: TPanel
+      Left = 0
+      Height = 324
+      Top = 335
+      Width = 835
+      Align = alClient
+      BevelOuter = bvNone
+      ClientHeight = 324
+      ClientWidth = 835
+      TabOrder = 2
+      object pnlStatus: TPanel
+        Left = 0
+        Height = 30
+        Top = 0
+        Width = 835
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 30
+        ClientWidth = 835
+        TabOrder = 0
+        object lblStatus: TLabel
+          Left = 8
+          Height = 17
+          Top = 7
+          Width = 100
+          Caption = 'No response yet'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lblElapsed: TLabel
+          Left = 240
+          Height = 17
+          Top = 7
+          Width = 4
+          Caption = ''
+        end
+        object lblSize: TLabel
+          Left = 360
+          Height = 17
+          Top = 7
+          Width = 4
+          Caption = ''
+        end
+      end
+      object pcResponse: TPageControl
+        Left = 0
+        Height = 294
+        Top = 30
+        Width = 835
+        ActivePage = tsRespBody
+        Align = alClient
+        TabIndex = 0
+        TabOrder = 1
+        object tsRespBody: TTabSheet
+          Caption = 'Body'
+          ClientHeight = 262
+          ClientWidth = 829
+          object memoRespBody: TMemo
+            Left = 0
+            Height = 262
+            Top = 0
+            Width = 829
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+            WordWrap = False
+          end
+        end
+        object tsRespHeaders: TTabSheet
+          Caption = 'Headers'
+          ClientHeight = 262
+          ClientWidth = 829
+          object gridRespHeaders: TStringGrid
+            Left = 0
+            Height = 262
+            Top = 0
+            Width = 829
+            Align = alClient
+            AutoFillColumns = True
+            Columns = <
+              item
+                SizePriority = 0
+                Title.Caption = 'Name'
+                Width = 240
+              end
+              item
+                Title.Caption = 'Value'
+                Width = 560
+              end>
+            FixedCols = 0
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goSmoothScroll]
+            RowCount = 1
+            TabOrder = 0
+          end
+        end
+        object tsWarnings: TTabSheet
+          Caption = 'Warnings'
+          ClientHeight = 262
+          ClientWidth = 829
+          object memoWarnings: TMemo
+            Left = 0
+            Height = 262
+            Top = 0
+            Width = 829
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+          end
+        end
+        object tsConsole: TTabSheet
+          Caption = 'Console'
+          ClientHeight = 262
+          ClientWidth = 829
+          object memoConsole: TMemo
+            Left = 0
+            Height = 262
+            Top = 0
+            Width = 829
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+            WordWrap = False
+          end
+        end
+      end
+    end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 697
+    Width = 1100
+    Panels = <
+      item
+        Width = 700
+      end
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object dlgOpen: TOpenDialog
+    Title = 'Open collection'
+    DefaultExt = '.json'
+    Filter = 'Request group files (*.json)|*.json|All files (*)|*'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    Left = 700
+    Top = 8
+  end
+  object dlgHook: TOpenDialog
+    Title = 'Choose hook program'
+    Filter = 'All files (*)|*'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    Left = 740
+    Top = 8
+  end
+  object pmTree: TPopupMenu
+    OnPopup = pmTreePopup
+    Left = 780
+    Top = 8
+    object miSetHook: TMenuItem
+      Caption = 'Set hook…'
+      OnClick = miSetHookClick
+    end
+    object miClearHook: TMenuItem
+      Caption = 'Clear hook'
+      OnClick = miClearHookClick
+    end
+    object miClearAllHooks: TMenuItem
+      Caption = 'Clear all hooks'
+      OnClick = miClearAllHooksClick
+    end
+  end
+  object dlgSaveEnv: TSaveDialog
+    Title = 'Save environment as'
+    DefaultExt = '.json'
+    Filter = 'Environment files (*.json)|*.json|All files (*)|*'
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
+    Left = 820
+    Top = 8
+  end
+end

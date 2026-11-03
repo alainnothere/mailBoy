@@ -1,0 +1,13 @@
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 301 Moved Permanently
+Location: https://example.test/new
+Content-Length: 0
+
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+content-type: text/plain
+x-final: yes
+
+landed

@@ -1,0 +1,19 @@
+# Lazarus / FPC build output
+lib/
+backup/
+*.o
+*.ppu
+*.a
+*.or
+*.compiled
+*.lps
+*.res
+# binaries
+bin/
+# OS noise
+*~
+.DS_Store
+
+# review bundles
+*.zip
+__pycache__/

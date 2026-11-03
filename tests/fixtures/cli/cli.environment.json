@@ -1,0 +1,8 @@
+{
+  "name": "cli env",
+  "_upstream_variable_scope": "environment",
+  "values": [
+    { "key": "host", "value": "env.test", "enabled": true },
+    { "key": "token", "value": "ENVTOKEN", "enabled": true }
+  ]
+}

@@ -1,0 +1,27 @@
+#!/bin/sh
+# Fake curl that answers like a server. Prints a canned HTTP response on
+# stdout with the received arguments echoed into X-Args (joined by |).
+# Controls, passed as ordinary arguments so the builder stays untouched:
+#   the URL (last arg) decides the status: .../status/NNN -> NNN
+#   if the URL contains "fail" -> print curl-style error to stderr, exit 7
+#   if the URL contains "timeout" -> sleep 5
+args=""
+for a in "$@"; do args="$args|$a"; done
+url=""
+for a in "$@"; do url="$a"; done
+case "$url" in
+  *fail*)   echo "curl: (7) Failed to connect to host" >&2; exit 7 ;;
+  *timeout*) sleep 5 ;;
+esac
+status=200; text="OK"
+case "$url" in
+  *status/201*) status=201; text="Created" ;;
+  *status/404*) status=404; text="Not Found" ;;
+  *status/500*) status=500; text="Internal Server Error" ;;
+esac
+printf 'HTTP/1.1 %s %s\r\n' "$status" "$text"
+printf 'Content-Type: application/json\r\n'
+printf 'X-Args: %s\r\n' "$args"
+printf 'X-Token: tok-%s\r\n' "$status"
+printf '\r\n'
+printf '{"status":%s,"echo":"%s"}' "$status" "$url"

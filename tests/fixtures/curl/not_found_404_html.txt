@@ -1,0 +1,6 @@
+HTTP/1.0 404 Not Found
+Content-Type: text/html
+Content-Length: 61
+Connection: close
+
+<html><body><h1>404 Not Found</h1><p>No such page.</p></body></html>

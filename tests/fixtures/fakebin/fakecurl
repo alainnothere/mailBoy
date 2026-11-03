@@ -1,0 +1,28 @@
+#!/bin/sh
+# Fake curl used by test_mbrunner. Echoes its argv, then its stdin.
+code=0
+if [ "$1" = "--exit" ]; then
+  code="$2"
+fi
+for a in "$@"; do
+  printf 'ARG:%s\n' "$a"
+  case "$a" in
+    --stderr) printf 'to stderr\n' >&2 ;;
+    --sleep) sleep 5 ;;
+    --big)
+      # 2 MB of x on stdout and 200 KB of y on stderr, interleaved.
+      xs=$(head -c 65536 /dev/zero | tr '\0' 'x')
+      ys=$(head -c 6400 /dev/zero | tr '\0' 'y')
+      i=0
+      while [ $i -lt 32 ]; do
+        printf '%s' "$xs"
+        printf '%s' "$ys" >&2
+        i=$((i+1))
+      done
+      ;;
+    --binary) printf '\000\001\377\n\r' ;;
+  esac
+done
+printf 'STDIN:'
+cat
+exit "$code"

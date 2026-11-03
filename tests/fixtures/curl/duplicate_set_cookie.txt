@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Set-Cookie: session=abc123; Path=/; HttpOnly
+Set-Cookie: theme=dark; Path=/
+set-cookie: lang=en; Max-Age=3600
+Content-Length: 2
+
+ok

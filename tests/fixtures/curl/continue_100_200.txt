@@ -1,0 +1,8 @@
+HTTP/1.1 100 Continue
+
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /items/42
+Content-Length: 9
+
+{"id":42}

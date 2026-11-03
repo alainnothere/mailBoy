@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: 49
+
+log follows:
+HTTP/1.1 500 x
+not a real header
