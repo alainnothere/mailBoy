@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}
   Classes, consoletestrunner,
-  test_sanity, test_mbModel, test_mbLoader, test_mbResponse, test_mbVariables, test_mbRequestBuilder, test_mbRunner, test_mbExecutor, test_mbCli, test_mbHook;
+  test_sanity, test_mbModel, test_mbLoader, test_mbResponse, test_mbVariables, test_mbRequestBuilder, test_mbRunner, test_mbExecutor, test_mbCli, test_mbHook, test_mbJsonFmt;
 
 var
   App: TTestRunner;

@@ -88,6 +88,10 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="src/core/mbjsonfmt.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
         <Filename Value="src/core/mbvariables.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>

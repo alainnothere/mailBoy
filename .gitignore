@@ -17,3 +17,5 @@ bin/
 # review bundles
 *.zip
 __pycache__/
+# make dist output
+dist/

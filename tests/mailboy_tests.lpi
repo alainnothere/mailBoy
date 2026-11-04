@@ -44,6 +44,10 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="test_mbjsonfmt.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
         <Filename Value="test_mbresponse.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>

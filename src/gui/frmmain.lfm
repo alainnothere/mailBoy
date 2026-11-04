@@ -351,6 +351,15 @@ object MainForm: TMainForm
               TabOrder = 0
               Text = 'none'
             end
+            object btnBeautify: TButton
+              Left = 232
+              Height = 26
+              Top = 4
+              Width = 90
+              Caption = 'Beautify'
+              OnClick = btnBeautifyClick
+              TabOrder = 1
+            end
           end
           object memoBody: TMemo
             Left = 0
@@ -497,6 +506,26 @@ object MainForm: TMainForm
           Top = 7
           Width = 4
           Caption = ''
+        end
+        object lblSent: TLabel
+          Left = 460
+          Height = 17
+          Top = 7
+          Width = 4
+          Caption = ''
+          Font.Color = clGray
+          ParentFont = False
+        end
+        object btnCopyRaw: TButton
+          Left = 737
+          Height = 26
+          Top = 2
+          Width = 90
+          Anchors = [akTop, akRight]
+          Caption = 'Copy raw'
+          Enabled = False
+          OnClick = btnCopyRawClick
+          TabOrder = 0
         end
       end
       object pcResponse: TPageControl

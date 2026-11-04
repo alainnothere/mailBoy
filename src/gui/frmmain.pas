@@ -12,15 +12,17 @@ interface
 
 uses
   Classes, SysUtils, contnrs, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ComCtrls, Grids, Spin, Menus, LCLType,
+  ExtCtrls, ComCtrls, Grids, Spin, Menus, LCLType, Clipbrd,
   mbModel, mbLoader, mbVariables, mbRequestBuilder, mbRunner, mbExecutor,
-  mbResponse, mbHook, mbHookHelp, frmEnvEdit;
+  mbResponse, mbHook, mbHookHelp, mbJsonFmt, frmEnvEdit;
 
 type
 
   { TMainForm }
 
   TMainForm = class(TForm)
+    btnBeautify: TButton;
+    btnCopyRaw: TButton;
     btnOpenCollection: TButton;
     btnOpenEnvironment: TButton;
     btnEnvNew: TButton;
@@ -46,6 +48,7 @@ type
     lblEnvironment: TLabel;
     lblHook: TLabel;
     lblHookSec: TLabel;
+    lblSent: TLabel;
     lblSize: TLabel;
     lblStatus: TLabel;
     memoAuth: TMemo;
@@ -83,6 +86,8 @@ type
     tsScript: TTabSheet;
     tsWarnings: TTabSheet;
     tvCollection: TTreeView;
+    procedure btnBeautifyClick(Sender: TObject);
+    procedure btnCopyRawClick(Sender: TObject);
     procedure btnOpenCollectionClick(Sender: TObject);
     procedure btnOpenEnvironmentClick(Sender: TObject);
     procedure btnHookBrowseClick(Sender: TObject);
@@ -111,6 +116,10 @@ type
     FTransportPath: string;
     FLoadWarnings: TStringList;      // loader warnings of the current collection
     FHookSource: string;             // where the hook of the last send came from
+    FRawBody: string;                // last response body, bytes as received
+    FSendCount: Integer;             // sends since the window opened
+    procedure ShowResponseBody(const ABody: string);
+    procedure MarkSent;
     procedure LoadCollection(const AFileName: string);
     procedure LoadEnvironment(const AFileName: string);
     procedure AddEnvironment(AEnv: TEnvironment);
@@ -768,6 +777,7 @@ begin
     Mode := bmNone;
   gridBodyFields.Visible := Mode in [bmUrlEncoded, bmFormData];
   memoBody.Visible := not gridBodyFields.Visible;
+  btnBeautify.Visible := memoBody.Visible;
   gridBodyFields.Columns[3].Visible := Mode = bmFormData;
 end;
 
@@ -1038,9 +1048,19 @@ begin
   if FSelected = nil then
     Exit;
   btnSend.Enabled := False;
+  Inc(FSendCount);
   UpdateStatusBar('Sending…');
+  // Wipe the previous answer first. Two identical 200s in a row look like
+  // one, and the send is synchronous, so the blank is the only edge there is.
   lblStatus.Caption := 'Sending…';
   lblStatus.Font.Color := clGray;
+  lblElapsed.Caption := '';
+  lblSize.Caption := '';
+  lblSent.Caption := '#' + IntToStr(FSendCount) + ' …';
+  FRawBody := '';
+  btnCopyRaw.Enabled := False;
+  memoRespBody.Text := '';
+  gridRespHeaders.RowCount := gridRespHeaders.FixedRows;
   // Synchronous on purpose (v1): one repaint so the user sees the state change.
   Application.ProcessMessages;
   memoConsole.Text := '';
@@ -1082,6 +1102,9 @@ begin
   lblStatus.Font.Color := clGray;
   lblElapsed.Caption := '';
   lblSize.Caption := '';
+  lblSent.Caption := '';
+  FRawBody := '';
+  btnCopyRaw.Enabled := False;
   memoRespBody.Text := '';
   gridRespHeaders.RowCount := gridRespHeaders.FixedRows;
   memoConsole.Text := '';
@@ -1117,7 +1140,7 @@ begin
     else
       lblElapsed.Caption := IntToStr(Resp.ElapsedMs) + ' ms';
     lblSize.Caption := FormatSize(Length(Resp.Body));
-    memoRespBody.Text := Resp.Body;
+    ShowResponseBody(Resp.Body);
     gridRespHeaders.BeginUpdate;
     try
       gridRespHeaders.RowCount := gridRespHeaders.FixedRows + Resp.Headers.Count;
@@ -1156,11 +1179,53 @@ begin
         'pick it in the Environment box, or edit the URL.');
     gridRespHeaders.RowCount := gridRespHeaders.FixedRows;
   end;
+  MarkSent;
   SetWarnings(FLoadWarnings, AResult.Warnings);
   ShowConsole(AResult);
   // A failed before hook means nothing was sent: the Console is the response.
   if AResult.Outcome = eoHookError then
     pcResponse.ActivePage := tsConsole;
+end;
+
+{ Pretty when it parses as JSON and is not huge, raw otherwise. The bytes
+  as received stay in FRawBody for Copy raw. }
+procedure TMainForm.ShowResponseBody(const ABody: string);
+var
+  Pretty, Err: string;
+begin
+  FRawBody := ABody;
+  btnCopyRaw.Enabled := ABody <> '';
+  if PrettyJson(ABody, Pretty, Err) then
+    memoRespBody.Text := Pretty
+  else
+    memoRespBody.Text := ABody;
+end;
+
+{ Send number and wall-clock time, so two identical answers still differ. }
+procedure TMainForm.MarkSent;
+begin
+  lblSent.Caption := '#' + IntToStr(FSendCount) + ' · ' + FormatDateTime('hh:nn:ss', Now);
+end;
+
+procedure TMainForm.btnCopyRawClick(Sender: TObject);
+begin
+  if FRawBody = '' then
+    Exit;
+  Clipboard.AsText := FRawBody;
+  UpdateStatusBar('Copied ' + FormatSize(Length(FRawBody)) + ' (raw body)');
+end;
+
+procedure TMainForm.btnBeautifyClick(Sender: TObject);
+var
+  Pretty, Err: string;
+begin
+  if PrettyJson(memoBody.Text, Pretty, Err) then
+  begin
+    memoBody.Text := Pretty;
+    UpdateStatusBar('');
+  end
+  else
+    UpdateStatusBar('Body not beautified: ' + Err);
 end;
 
 procedure TMainForm.AddHookBlock(AHook: THookResult);
