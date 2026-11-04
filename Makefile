@@ -5,7 +5,8 @@
 #   make release        optimised, stripped Linux builds           -> bin/mailboy, bin/mailboy-cli
 #   make release-win64  same for Windows, cross-compiled            -> bin/mailboy.exe, bin/mailboy-cli.exe
 #   make all            every binary above, release, both targets
-#   make dist           all + the Windows portable zip              -> dist/mailboy-<ver>-win64-portable.zip
+#   make dist           all + the portable archives: dist/mailboy-<ver>-win64-portable.zip
+#                                                   and dist/mailboy-<ver>-linux-x86_64.tar.gz
 #
 # Windows cross-compiling on Debian/Ubuntu needs only distro packages:
 #   apt install binutils-mingw-w64-x86-64 fp-units-win-rtl-3.2.2 fp-units-win-base-3.2.2 \
@@ -20,6 +21,7 @@ WIN      := --os=win64 --cpu=x86_64 --ws=win32
 # Single source of truth for the version is MailBoyVersion in src/cli/mbcli.pas.
 VERSION  := $(shell sed -n "s/.*MailBoyVersion *= *'\([^']*\)'.*/\1/p" src/cli/mbcli.pas)
 PORTABLE := mailboy-$(VERSION)-win64-portable
+LINUXTAR := mailboy-$(VERSION)-linux-x86_64
 
 .PHONY: build release release-win64 all dist test clean examples
 
@@ -39,17 +41,22 @@ release-win64:
 
 all: release release-win64 examples
 
-# One zip, two exes, the docs a stranger needs. Unzip anywhere, run, no
-# installer, so the browser asks "are you sure" once instead of ten times.
+# One archive per platform, two binaries each, README, LICENSE and the hook
+# examples. Unpack anywhere, run, no installer, so the browser asks "are you
+# sure" once instead of ten times.
 dist: all
-	rm -rf $(DIST)/$(PORTABLE) $(DIST)/$(PORTABLE).zip
-	mkdir -p $(DIST)/$(PORTABLE)/examples
+	rm -rf $(DIST)/$(PORTABLE) $(DIST)/$(PORTABLE).zip $(DIST)/$(LINUXTAR) $(DIST)/$(LINUXTAR).tar.gz
+	mkdir -p $(DIST)/$(PORTABLE)/examples $(DIST)/$(LINUXTAR)/examples
 	cp $(BIN)/mailboy.exe $(BIN)/mailboy-cli.exe $(DIST)/$(PORTABLE)/
+	cp $(BIN)/mailboy $(BIN)/mailboy-cli $(DIST)/$(LINUXTAR)/
 	cp README.md LICENSE $(DIST)/$(PORTABLE)/
+	cp README.md LICENSE $(DIST)/$(LINUXTAR)/
 	cp -r examples/hooks $(DIST)/$(PORTABLE)/examples/
+	cp -r examples/hooks $(DIST)/$(LINUXTAR)/examples/
 	cd $(DIST) && zip -qr $(PORTABLE).zip $(PORTABLE)
-	rm -rf $(DIST)/$(PORTABLE)
-	@ls -l $(DIST)/$(PORTABLE).zip
+	cd $(DIST) && tar -czf $(LINUXTAR).tar.gz $(LINUXTAR)
+	rm -rf $(DIST)/$(PORTABLE) $(DIST)/$(LINUXTAR)
+	@ls -l $(DIST)/$(PORTABLE).zip $(DIST)/$(LINUXTAR).tar.gz
 
 test: build examples
 	$(LAZBUILD) tests/mailboy_tests.lpi

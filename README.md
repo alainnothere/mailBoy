@@ -1,5 +1,7 @@
 # mailBoy
 
+![mailBoy](screenshots/mailboy.png)
+
 mailBoy read a comic once. Issue 14, 1987. The courier in it does not
 lose the mail. He keeps it. He builds a place on a hill with a gate and
 a ledger, and every morning the whole town walks up and gives him their
